@@ -25,8 +25,26 @@ import java.util.logging.Logger;
 public class FileHandler {
     private static String dirPath="c:\\\\BluetoothLock\\\\savedDevices";
     private static File deviceFile=new File("c:\\\\BluetoothLock\\\\savedDevices\\\\deviceFile.txt");
+    private static File paramFile=new File("c:\\\\BluetoothLock\\\\savedDevices\\\\paramFile.txt");
     static {
-        if(!deviceFile.exists()) (new File(dirPath)).mkdirs();
+        if(!deviceFile.exists()) 
+        {
+            (new File(dirPath)).mkdirs();
+            try {
+                deviceFile.createNewFile();
+            } catch (IOException ex) {
+                Logger.getLogger(FileHandler.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        if(!paramFile.exists()) 
+        {
+            (new File(dirPath)).mkdirs();
+            try {
+                paramFile.createNewFile();
+            } catch (IOException ex) {
+                Logger.getLogger(FileHandler.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     public static ArrayList<Device> readDevice(){
@@ -62,6 +80,10 @@ public class FileHandler {
 
     }
     
+    public static String[] readConfig(){
+        String[] param=new String[0];
+        return param;
+    }
     
     
 }

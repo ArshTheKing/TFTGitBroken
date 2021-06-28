@@ -6,6 +6,7 @@
 package com.mycompany.tft.ctl;
 
 import com.mycompany.tft.api.FileHandler;
+import com.mycompany.tft.gui.Config;
 import com.mycompany.tft.gui.DeviceList;
 import com.mycompany.tft.gui.MainFrame;
 import com.mycompany.tft.model.command.SearchCommand;
@@ -31,13 +32,15 @@ import javax.swing.JPopupMenu;
 public class Control {
     private static Control myself;
     private static MainFrame ui;
-    //private static ArrayList<Device> dev;
+    private static ArrayList<Device> dev;
+    private static String[] param;
     private Device keyDevice;
     
     private Control(){
         this.myself=this;
         ui=new MainFrame(this);
-        
+        dev=FileHandler.readDevice();
+        param=FileHandler.readConfig();
     }
     
     public static Control getInstance(){
@@ -99,5 +102,20 @@ public class Control {
     
     public void setKeyDevice(Device dev) {
         this.keyDevice=dev;
+    }
+
+    public void stopSensor() {
+    }
+
+    public void startSensor() {
+    }
+
+    public boolean isKeyDeviceSet() {
+        return (keyDevice!=null)? true:false;
+    }
+
+    public void config() {
+        Config config = new Config();
+        config.setVisible(true);
     }
 }
