@@ -22,6 +22,7 @@ import javax.bluetooth.RemoteDevice;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
@@ -55,10 +56,11 @@ public class Control {
         loading.setUndecorated(true);
         loading.getContentPane().add(p1);
         loading.pack();
-        Point location = ui.getLocation();
+        /*Point location = ui.getLocation();
         Point loadingLocation=new Point();
         loadingLocation.setLocation(location.getX()+260, location.getY()+40);
-        loading.setLocation(loadingLocation);
+        loading.setLocation(loadingLocation);*/
+        loading.setLocationRelativeTo(ui);
         loading.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         loading.setModal(false);
         
@@ -79,7 +81,9 @@ public class Control {
                 devices.add(device);
                 
             }
-            new DeviceList(ui, true, devices,0);
+            if(!res.isEmpty())new DeviceList(ui, true, devices,0);
+            else searchDevice();
+            
         } catch (IOException ex) {
             System.out.println("Exepcion en ctl.searchDevice");
         }

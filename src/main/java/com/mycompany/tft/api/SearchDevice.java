@@ -8,6 +8,8 @@ package com.mycompany.tft.api;
 import com.intel.bluetooth.RemoteDeviceHelper;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.bluetooth.BluetoothStateException;
 import javax.bluetooth.DeviceClass;
 import javax.bluetooth.DiscoveryAgent;
@@ -15,6 +17,8 @@ import javax.bluetooth.DiscoveryListener;
 import javax.bluetooth.LocalDevice;
 import javax.bluetooth.RemoteDevice;
 import javax.bluetooth.ServiceRecord;
+import javax.microedition.io.Connection;
+import javax.microedition.io.Connector;
 
 /**
  *
@@ -31,13 +35,15 @@ public class SearchDevice {
         DiscoveryListener listener = new DiscoveryListener() {
 
             public void deviceDiscovered(RemoteDevice btDevice, DeviceClass cod) {
-                System.out.println("Device " + btDevice.getBluetoothAddress() + " found");
-                devicesDiscovered.add(btDevice);
-                
                 try {
-                    System.out.println("     name " + btDevice.getFriendlyName(false));
-                    System.out.println("Intensidad: "+RemoteDeviceHelper.readRSSI(btDevice));
-                } catch (IOException cantGetDeviceName) {
+                    System.out.println("Device " + btDevice.getBluetoothAddress() + " found");
+                    //Establecermos una conexion basica para verificar la presencia del dispositivo
+                    Connection open = Connector.open("btspp://"+btDevice.getBluetoothAddress()+":1;master=false;authenticate=false;encrypt=false;");
+                } catch (IOException ex) {
+                    String substring = ex.getLocalizedMessage().substring(ex.getLocalizedMessage().indexOf("[")+1,ex.getLocalizedMessage().indexOf("]"));
+                    System.out.println(ex.getLocalizedMessage());
+                    if(substring.equals(10064+"")) 
+                    devicesDiscovered.add(btDevice);
                 }
             }
 
