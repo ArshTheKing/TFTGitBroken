@@ -255,17 +255,17 @@ public class Config extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButton3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        int interval = jSlider1.getValue();
+        String interval = String.valueOf(jSlider1.getValue());
         Enumeration<AbstractButton> elements = buttonGroup1.getElements();
-        int option;
+        String option = null;
         for (int i=0;elements.hasMoreElements();i++) {
             AbstractButton nextElement = elements.nextElement();
-            if(nextElement.isSelected())option=i;
+            if(nextElement.isSelected())option=String.valueOf(i);
         }
-        Device selected;
+        Device selected = null;
         if(jCheckBox2.isSelected()) selected=loaded;
         
-        Control.getInstance().saveConfig();
+        Control.getInstance().saveConfig(interval,selected,option);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

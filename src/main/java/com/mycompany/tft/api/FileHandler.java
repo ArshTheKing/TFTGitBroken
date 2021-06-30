@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -85,9 +86,13 @@ public class FileHandler {
         return param;
     }
     
-    public static void writeConfig(String[] param){
+    public static void writeConfig(String[] param) throws IOException{
+        FileWriter fileWriter = new FileWriter(paramFile);
         
-        
+        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter, 0);
+        for (String string : param) {
+            bufferedWriter.write(string, 0, 0);
+        }
     }
     
     

@@ -144,7 +144,9 @@ public class Control {
         ui.toFront();
     }
 
-    public void saveConfig() {
-        
+    public void saveConfig(String interval, Device selected, String option) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    
 }
