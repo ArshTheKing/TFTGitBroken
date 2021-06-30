@@ -143,4 +143,8 @@ public class Control {
         ui.setEnabled(true);
         ui.toFront();
     }
+
+    public void saveConfig() {
+        
+    }
 }
