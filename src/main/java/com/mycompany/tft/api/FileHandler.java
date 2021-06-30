@@ -85,5 +85,10 @@ public class FileHandler {
         return param;
     }
     
+    public static void writeConfig(String[] param){
+        
+        
+    }
+    
     
 }

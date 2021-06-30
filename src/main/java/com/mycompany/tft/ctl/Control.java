@@ -6,10 +6,13 @@
 package com.mycompany.tft.ctl;
 
 import com.mycompany.tft.api.FileHandler;
+import com.mycompany.tft.api.Sensor;
 import com.mycompany.tft.gui.Config;
 import com.mycompany.tft.gui.DeviceList;
 import com.mycompany.tft.gui.MainFrame;
 import com.mycompany.tft.model.command.SearchCommand;
+import com.mycompany.tft.model.command.StartCommand;
+import com.mycompany.tft.model.command.StopCommand;
 import com.mycompany.tft.objects.Device;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -102,16 +105,29 @@ public class Control {
         ArrayList<Device> readDevice = FileHandler.readDevice();
         new DeviceList(ui, true, readDevice,1);
         ui.setEnabled(true);
+        ui.toFront();
     }
     
     public void setKeyDevice(Device dev) {
         this.keyDevice=dev;
+        
     }
 
     public void stopSensor() {
+        ui.setEnabled(false);
+        StopCommand stopCommand = new StopCommand();
+        stopCommand.setParameters();
+        stopCommand.execute();
+        stopCommand.getResults();
+        ui.setEnabled(true);
     }
 
     public void startSensor() {
+        StartCommand sensor = new StartCommand();
+        sensor.setParameters(keyDevice.getId().toString());
+        sensor.execute();
+        String results = (String) sensor.getResults();
+        System.out.println(results);
     }
 
     public boolean isKeyDeviceSet() {
@@ -121,5 +137,10 @@ public class Control {
     public void config() {
         Config config = new Config();
         config.setVisible(true);
+    }
+
+    public void enableUI() {
+        ui.setEnabled(true);
+        ui.toFront();
     }
 }

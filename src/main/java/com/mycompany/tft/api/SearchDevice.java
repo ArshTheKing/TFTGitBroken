@@ -41,7 +41,6 @@ public class SearchDevice {
                     Connection open = Connector.open("btspp://"+btDevice.getBluetoothAddress()+":1;master=false;authenticate=false;encrypt=false;");
                 } catch (IOException ex) {
                     String substring = ex.getLocalizedMessage().substring(ex.getLocalizedMessage().indexOf("[")+1,ex.getLocalizedMessage().indexOf("]"));
-                    System.out.println(ex.getLocalizedMessage());
                     if(substring.equals(10064+"")) 
                     devicesDiscovered.add(btDevice);
                 }
