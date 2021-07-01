@@ -36,7 +36,7 @@ import javax.swing.JPopupMenu;
 public class Control {
     private static Control myself;
     private static MainFrame ui;
-    private static ArrayList<Device> dev;
+    private static ArrayList<Device> dev=new ArrayList<>();
     private static String[] param;
     private Device keyDevice;
     
@@ -98,12 +98,13 @@ public class Control {
     
     public void saveDevice(Device dev){
        FileHandler.writeDevice(dev);
+       this.dev.add(dev);
     }
     
 
     public void selectKeyDevice() {
         ArrayList<Device> readDevice = FileHandler.readDevice();
-        new DeviceList(ui, true, readDevice,1);
+        new DeviceList(ui, true, getDevices(),1);
         ui.setEnabled(true);
         ui.toFront();
     }
@@ -137,6 +138,7 @@ public class Control {
     public void config() {
         Config config = new Config();
         config.setVisible(true);
+        ui.setEnabled(false);
     }
 
     public void enableUI() {
@@ -145,7 +147,15 @@ public class Control {
     }
 
     public void saveConfig(String interval, Device selected, String option) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String[] name;
+        if(selected!=null) name = new String[]{interval,selected.getId(),option};
+        else name=new String[]{interval,"null",option};
+        FileHandler.writeConfig(name);
+    }
+
+    public ArrayList<Device> getDevices() {
+        if(dev.isEmpty()) dev = FileHandler.readDevice();
+        return dev;
     }
 
     

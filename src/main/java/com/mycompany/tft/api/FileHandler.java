@@ -86,12 +86,20 @@ public class FileHandler {
         return param;
     }
     
-    public static void writeConfig(String[] param) throws IOException{
-        FileWriter fileWriter = new FileWriter(paramFile);
+    public static void writeConfig(String[] param){
+        FileWriter fileWriter;
+        try {
+            fileWriter = new FileWriter(paramFile);
         
-        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter, 0);
+        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter, 10);
         for (String string : param) {
-            bufferedWriter.write(string, 0, 0);
+            System.out.println(string);
+            bufferedWriter.write(string);
+            bufferedWriter.newLine();
+        }
+        bufferedWriter.close();
+        } catch (IOException ex) {
+            Logger.getLogger(FileHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

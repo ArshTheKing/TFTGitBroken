@@ -22,6 +22,7 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame(Control ctl) {
         this.ctl=ctl;
         initComponents();
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
     

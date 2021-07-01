@@ -113,12 +113,19 @@ public class DeviceList extends javax.swing.JDialog {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         int index=jList1.getSelectedIndex();
         if(index!=-1){
-        if(mode==0) {
-            new EmailDialog((Frame) this.getParent(), true, dev.get(index)).setLocationRelativeTo(this);
-            Control.getInstance().saveDevice(dev.get(jList1.getSelectedIndex()));
-        }
-        else Control.getInstance().setKeyDevice(dev.get(jList1.getSelectedIndex()));
-        this.dispose();
+        
+            switch (mode){
+                case 0: new EmailDialog((Frame) this.getParent(), true, dev.get(index)).setLocationRelativeTo(this);
+                        Control.getInstance().saveDevice(dev.get(jList1.getSelectedIndex()));
+                         break;
+                case 1: Control.getInstance().setKeyDevice(dev.get(jList1.getSelectedIndex()));;
+                        break;
+                case 2: ((Config) this.getParent()).setDevice(dev.get(jList1.getSelectedIndex()));
+                        break;
+                default: ;
+                        break;
+            };
+            this.dispose();
         } else JOptionPane.showMessageDialog(this, msg);
     }//GEN-LAST:event_jButton1ActionPerformed
 
