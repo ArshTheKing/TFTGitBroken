@@ -7,6 +7,7 @@ package com.mycompany.tft.gui;
 
 import com.mycompany.tft.ctl.Control;
 import com.mycompany.tft.objects.Device;
+import com.mycompany.tft.objects.Params;
 import java.awt.Component;
 import java.util.Enumeration;
 import javax.swing.AbstractButton;
@@ -24,11 +25,26 @@ public class Config extends javax.swing.JFrame {
     /**
      * Creates new form Config
      */
-    public Config() {
+    public Config(Params params) {
         initComponents();
         enableDeviceSelection(false);
-        buttonGroup1.setSelected(jRadioButton1.getModel(), true);
-        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        jSlider1.setValue(Integer.parseInt(params.getInterval()));
+        jLabel5.setText(String.valueOf(jSlider1.getValue())+" s");
+        loaded=params.getKey();
+        if(loaded!=null) {
+            jTextField1.setText(loaded.getName());
+            jCheckBox2.setSelected(true);
+        }
+        switch(params.getMode()){
+            case "0":buttonGroup1.setSelected(jRadioButton2.getModel(), true);
+                break;
+            case "1":buttonGroup1.setSelected(jRadioButton1.getModel(), true);
+                break;
+            case "2":buttonGroup1.setSelected(jRadioButton3.getModel(), true);
+                break;
+        }
+        
+        this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
     }
 
     /**

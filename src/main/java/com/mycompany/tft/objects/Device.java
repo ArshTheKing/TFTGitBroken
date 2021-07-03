@@ -80,6 +80,11 @@ public class Device {
         }
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Device{" + "Id=" + Id + ", name=" + name + ", mail=" + mail + '}';
+    }
     
     
 }

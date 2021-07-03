@@ -5,25 +5,37 @@
  */
 package com.mycompany.tft.model.command;
 
+import com.mycompany.tft.api.FileHandler;
+import com.mycompany.tft.objects.Device;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author AZAEL
  */
 public class RegisterCommand implements Command{
+    Exception exception;
+    private Device arg;
 
     @Override
-    public void setParameters(String... args) {
-        String arg = args[0];
+    public void setParameters(Object... args) {
+        arg = (Device) args[0];
     }
 
     @Override
     public void execute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            FileHandler.writeDevice(arg);
+        } catch (IOException ex) {
+            exception=ex;
+        }
     }
 
     @Override
     public Object getResults() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return exception;
     }
     
 }

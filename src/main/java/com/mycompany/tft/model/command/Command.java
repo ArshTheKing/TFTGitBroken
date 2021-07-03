@@ -11,7 +11,8 @@ package com.mycompany.tft.model.command;
  */
 public interface Command {
     
-    void setParameters(String... args);
+    
+    void setParameters(Object... args);
     void execute();
     Object getResults();
 }

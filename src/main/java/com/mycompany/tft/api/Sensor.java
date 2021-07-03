@@ -5,6 +5,10 @@
  */
 package com.mycompany.tft.api;
 
+import actuator.Actuator;
+import actuator.NetworkShutdownActuator;
+import actuator.ShutdownActuator;
+import actuator.UserBlockActuator;
 import com.mycompany.tft.ctl.Control;
 import com.mycompany.tft.objects.Device;
 import java.util.ArrayList;
@@ -21,17 +25,30 @@ public class Sensor extends Thread{
     private String key;
     private int time;
     private static  Sensor myself;
+    private Actuator action;
     private boolean exit;
 
-    private Sensor(String key, int time) {
+    private Sensor(String key, int time, int actuator) {
         super();
         this.key = key;
         this.time = time*1000;
+        setAction(actuator);
     }
     public static Sensor getInstance(){
-        return (myself== null) ? myself=new Sensor(null, 1): myself;
+        return (myself== null) ? myself=new Sensor(null, 1,0): myself;
     }
 
+    private void setAction(int actuator) {
+        switch(actuator){
+            case 0:this.action=new NetworkShutdownActuator();
+             break;
+            case 1:this.action=new ShutdownActuator();
+             break;
+            case 2:this.action=new UserBlockActuator();
+             break;
+        }
+    }
+    
     public void setKey(String key) {
         this.key = key;
     }
@@ -40,13 +57,15 @@ public class Sensor extends Thread{
         this.time = time;
     }
     
+    public void setMode(int mode) {
+        setAction(mode);
+    }
     
 
     public void run() {
         exit=false;
         while (!exit) {            
             try {
-                System.out.println("SLEEP");
                 sleep(time);
             } catch (InterruptedException ex) {
                 System.out.println("Error en el sensor");
@@ -57,28 +76,22 @@ public class Sensor extends Thread{
     }
 
     private void searchKeyDevice() {
-        ArrayList<RemoteDevice> search = new ArrayList<>(); 
+        Boolean search = null; 
         try {
-            search =(ArrayList<RemoteDevice>) SearchDevice.search();
-        } catch (BluetoothStateException ex) {
-            this.run();
-        } catch (InterruptedException ex) {
-            this.run();
+            search = SearchDevice.searchDevice(key);
+        } catch (BluetoothStateException | InterruptedException ex) {
+            this.start();
         }
-        if(search!=null)
-        for (RemoteDevice remoteDevice : search) {
-            if(remoteDevice.getBluetoothAddress().equals(key)) 
-            {System.out.println("Detectado");
-                return;
-            }
-        }
-        System.out.println("No detectado");
+        if(!search) System.out.println("Detectado");//action.actuate();
+        
     }
 
     public void exit() {
         exit=true;
         myself=null;
     }
+
+
     
     
 }

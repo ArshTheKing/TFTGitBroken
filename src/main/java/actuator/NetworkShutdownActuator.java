@@ -5,10 +5,24 @@
  */
 package actuator;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author AZAEL
  */
-public class NetworkShutdownActuator {
+public class NetworkShutdownActuator implements Actuator{
+
+    @Override
+    public void actuate() {
+        Runtime rt = Runtime.getRuntime();
+        try {
+            Process pr = rt.exec("ipconfig /release");
+        } catch (IOException ex) {
+            actuate();
+        }
+    }
     
 }

@@ -5,25 +5,35 @@
  */
 package com.mycompany.tft.model.command;
 
+import com.mycompany.tft.api.FileHandler;
+import com.mycompany.tft.objects.Params;
+import java.io.IOException;
+
 /**
  *
  * @author AZAEL
  */
 public class UpdateCommand implements Command{
+    Exception exception;
+    private Params params;
 
     @Override
-    public void setParameters(String... args) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void setParameters(Object... args) {
+        this.params= new Params(((String) args[0]),((String) args[1]),((String) args[2]));
     }
 
     @Override
     public void execute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            FileHandler.writeConfig(params.getInterval(), params.getKey(),params.getMode());
+        } catch (IOException ex) {
+            exception=ex;
+        }
     }
 
     @Override
     public Object getResults() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return exception;
     }
     
 }

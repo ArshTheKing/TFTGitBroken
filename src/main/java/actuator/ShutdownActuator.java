@@ -5,10 +5,24 @@
  */
 package actuator;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author AZAEL
  */
-public class ShutdownActuator {
+public class ShutdownActuator implements Actuator{
+
+    @Override
+    public void actuate() {
+        Runtime rt = Runtime.getRuntime();
+        try {
+            Process pr = rt.exec("shutdown -s -t 0");
+        } catch (IOException ex) {
+            actuate();
+        }
+    }
     
 }

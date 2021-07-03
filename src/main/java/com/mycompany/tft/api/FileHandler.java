@@ -6,6 +6,7 @@
 package com.mycompany.tft.api;
 
 import com.mycompany.tft.objects.Device;
+import com.mycompany.tft.objects.Params;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -48,59 +49,61 @@ public class FileHandler {
         }
     }
 
-    public static ArrayList<Device> readDevice(){
+    public static ArrayList<Device> readDevice() throws IOException, FileNotFoundException{
         ArrayList<Device> temp= new ArrayList<>();
         BufferedReader reader;
-		try {
-			reader = new BufferedReader(new FileReader(deviceFile));
-			String line = reader.readLine();
-                        while (line != null) {
-                                String[] split = line.split(";");
-                                temp.add(new Device(split[0], split[1], split[2]));
-                                line = reader.readLine();
-			}
-			reader.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+        reader = new BufferedReader(new FileReader(deviceFile));
+        String line = reader.readLine();
+        while (line != null) {
+                String[] split = line.split(";");
+                temp.add(new Device(split[0], split[1], split[2]));
+                line = reader.readLine();
+        }
+        reader.close();
         
         return temp;
     }
     
-    public static void writeDevice(Device dev){
+    public static void writeDevice(Device dev) throws IOException{
         FileWriter fr;
-        try {
             fr = new FileWriter(deviceFile, true);
             BufferedWriter br = new BufferedWriter(fr);
             br.append(dev.getId()+";"+dev.getName()+";"+dev.getMail()+System.lineSeparator());
             br.close();
             fr.close();
-        } catch (IOException ex) {
-            Logger.getLogger(FileHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
 
     }
     
-    public static String[] readConfig(){
-        String[] param=new String[0];
-        return param;
+    public static Params readConfig() throws FileNotFoundException, IOException{
+        BufferedReader reader;
+            reader = new BufferedReader(new FileReader(paramFile));
+            String line = reader.readLine();
+            String interval = line;
+            line = reader.readLine();
+            String[] split = line.split(";");
+            Device selected = new Device(split[0],split[1], split[2]);
+            line = reader.readLine();
+            String option = line;
+            reader.close();
+            return new Params(interval, selected, line);
+        
     }
     
-    public static void writeConfig(String[] param){
+    public static void writeConfig(String interval, Device selected, String option) throws IOException {
         FileWriter fileWriter;
-        try {
             fileWriter = new FileWriter(paramFile);
         
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter, 10);
+        String[] param=new String[]{interval,"null",option};
+        if(selected!=null)param[1]=selected.getId()+";"+selected.getName()+";"+selected.getMail();
         for (String string : param) {
             System.out.println(string);
             bufferedWriter.write(string);
             bufferedWriter.newLine();
         }
         bufferedWriter.close();
-        } catch (IOException ex) {
-            Logger.getLogger(FileHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
     

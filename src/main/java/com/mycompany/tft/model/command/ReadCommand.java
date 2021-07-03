@@ -5,39 +5,33 @@
  */
 package com.mycompany.tft.model.command;
 
-import com.mycompany.tft.api.SearchDevice;
+import com.mycompany.tft.api.FileHandler;
 import com.mycompany.tft.objects.Device;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.bluetooth.BluetoothStateException;
-import javax.bluetooth.RemoteDevice;
 
 /**
  *
  * @author AZAEL
  */
-public class SearchCommand implements Command{
-    Exception exception;
+public class ReadCommand implements Command{
+
     private ArrayList<Device> devices;
-    
-    
+    private IOException exception;
+
     @Override
     public void setParameters(Object... args) {
+        devices=null;
         exception=null;
-        devices=new ArrayList<>();;
     }
 
     @Override
     public void execute() {
         try {
-            ArrayList<RemoteDevice> search = SearchDevice.search();
-            for (RemoteDevice dev : search) {
-                Device device = new Device(dev.getBluetoothAddress(), dev.getFriendlyName(true), null);
-                devices.add(device);
-            }
-        } catch (Exception ex) {
+            devices = FileHandler.readDevice();
+        } catch (IOException ex) {
             exception=ex;
         }
     }
