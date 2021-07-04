@@ -5,11 +5,8 @@
  */
 package com.mycompany.tft.api;
 
-import com.intel.bluetooth.RemoteDeviceHelper;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.bluetooth.BluetoothStateException;
 import javax.bluetooth.DeviceClass;
 import javax.bluetooth.DiscoveryAgent;
@@ -118,7 +115,6 @@ public class SearchDevice {
             if (started) {
                 System.out.println("wait for device inquiry to complete...");
                 inquiryCompletedEvent.wait();
-                System.out.println(devicesDiscovered.size() +  " device(s) found");
             }
         }
         return present[0];

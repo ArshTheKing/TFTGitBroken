@@ -6,6 +6,7 @@
 package com.mycompany.tft.model.command;
 
 import com.mycompany.tft.api.Sensor;
+import com.mycompany.tft.objects.Device;
 
 /**
  *
@@ -14,14 +15,14 @@ import com.mycompany.tft.api.Sensor;
 public class StartCommand implements Command{
     Exception exception;
 
-    private String key;
+    private Device key;
     private Sensor sensor;
     private int time;
     private int mode;
 
     @Override
     public void setParameters(Object... args) {
-        key = (String) args[0];
+        key = (Device) args[0];
         time= (int) args[1];
         mode= (int) args[2];
     }

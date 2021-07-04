@@ -22,13 +22,13 @@ import javax.bluetooth.RemoteDevice;
  * @author AZAEL
  */
 public class Sensor extends Thread{
-    private String key;
+    private Device key;
     private int time;
     private static  Sensor myself;
     private Actuator action;
     private boolean exit;
 
-    private Sensor(String key, int time, int actuator) {
+    private Sensor(Device key, int time, int actuator) {
         super();
         this.key = key;
         this.time = time*1000;
@@ -49,7 +49,7 @@ public class Sensor extends Thread{
         }
     }
     
-    public void setKey(String key) {
+    public void setKey(Device key) {
         this.key = key;
     }
 
@@ -78,7 +78,7 @@ public class Sensor extends Thread{
     private void searchKeyDevice() {
         Boolean search = null; 
         try {
-            search = SearchDevice.searchDevice(key);
+            search = SearchDevice.searchDevice(key.getId());
         } catch (BluetoothStateException | InterruptedException ex) {
             this.start();
         }

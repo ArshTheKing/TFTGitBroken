@@ -91,7 +91,7 @@ public class Control {
 
     public void startSensor() {
         StartCommand sensor = new StartCommand();
-        sensor.setParameters(keyDevice.getId().toString());
+        sensor.setParameters(keyDevice,Integer.parseInt(params.getInterval()),Integer.parseInt(params.getMode()));
         sensor.execute();
         String results = (String) sensor.getResults();
         System.out.println(results);
