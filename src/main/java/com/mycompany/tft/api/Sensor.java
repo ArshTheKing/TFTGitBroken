@@ -9,13 +9,8 @@ import actuator.Actuator;
 import actuator.NetworkShutdownActuator;
 import actuator.ShutdownActuator;
 import actuator.UserBlockActuator;
-import com.mycompany.tft.ctl.Control;
 import com.mycompany.tft.objects.Device;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.bluetooth.BluetoothStateException;
-import javax.bluetooth.RemoteDevice;
 
 /**
  *
@@ -63,8 +58,7 @@ public class Sensor extends Thread{
     
 
     public void run() {
-        exit=false;
-        while (!exit) {            
+        while (true) {            
             try {
                 sleep(time);
             } catch (InterruptedException ex) {
@@ -76,19 +70,26 @@ public class Sensor extends Thread{
     }
 
     private void searchKeyDevice() {
-        Boolean search = null; 
+        Boolean search = false; 
         try {
             search = SearchDevice.searchDevice(key.getId());
         } catch (BluetoothStateException | InterruptedException ex) {
-            this.start();
+            System.out.println("Internal problem");
+            SearchDevice.cancelInquiry(1);
         }
-        if(!search) System.out.println("Detectado");//action.actuate();
+        if(!search) MailSender.getInstance().sendEmail();//action.actuate();
         
     }
 
-    public void exit() {
-        exit=true;
-        myself=null;
+    public void sleep() {
+        SearchDevice.cancelInquiry(1);
+        this.suspend();
+    }
+
+    public void begin() {
+        Thread.State state=getState();
+        if(state.equals(Thread.State.NEW)) this.start();
+        else this.resume();
     }
 
 

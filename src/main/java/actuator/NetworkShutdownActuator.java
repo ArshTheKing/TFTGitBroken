@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  * @author AZAEL
  */
 public class NetworkShutdownActuator implements Actuator{
-
+    private boolean status=true;
     @Override
     public void actuate() {
         Runtime rt = Runtime.getRuntime();

@@ -6,6 +6,7 @@
 package com.mycompany.tft.ctl;
 
 import com.mycompany.tft.api.FileHandler;
+import com.mycompany.tft.api.MailSender;
 import com.mycompany.tft.gui.Config;
 import com.mycompany.tft.gui.DeviceList;
 import com.mycompany.tft.gui.MainFrame;
@@ -14,9 +15,6 @@ import com.mycompany.tft.objects.Device;
 import com.mycompany.tft.objects.Params;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.bluetooth.RemoteDevice;
 
 /**
  *
@@ -36,6 +34,12 @@ public class Control {
             dev=FileHandler.readDevice();
             params= FileHandler.readConfig();
             keyDevice=params.getKey();
+            if(keyDevice!=null)
+            {
+                ui.setKeyDeviceTag(keyDevice.getName());
+                MailSender.getInstance().setMail(keyDevice.getMail());
+            }
+            else ui.setKeyDeviceTag("Ninguno");
         } catch (IOException ex) {
             System.out.println("Error al leer los archivos");
         }
@@ -45,16 +49,26 @@ public class Control {
         return (myself==null) ? new Control(): myself;
     }
     
-    public void searchDevice(){
-        ui.setEnabled(false);
+    public void searchDevice() {
+        ui.setStatusTag("Searching devices");
         SearchCommand sC = new SearchCommand();
         sC.setParameters();
         sC.execute();
-        Object results = sC.getResults();
+        ui.setEnabled(false);
+        Object results =sC.getResults();
         if(results instanceof Exception) System.out.println("Exepcion: "+ ((Exception) results).getMessage());
         if(!((ArrayList) results).isEmpty()) 
                 new DeviceList(ui, true, (ArrayList<Device>) results,0);
-        else searchDevice();
+        else {
+            ui.setStatusTag("Ningun dispositivo encontrado");
+            try {
+                Thread.sleep(3 * 1000);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+        }
+        ui.setStatusTag("Ocioso");
+        ui.setEnabled(true);
     }
     
     public void saveDevice(Device dev){
@@ -78,14 +92,18 @@ public class Control {
     
     public void setKeyDevice(Device dev) {
         this.keyDevice=dev;
+        ui.setKeyDeviceTag(dev.getName());
+        MailSender.getInstance().setMail(keyDevice.getMail());
     }
 
     public void stopSensor() {
+        ui.setStatusTag("Parando Sensor");
         ui.setEnabled(false);
         StopCommand stopCommand = new StopCommand();
         stopCommand.setParameters();
         stopCommand.execute();
         stopCommand.getResults();
+        ui.setStatusTag("Ocioso");
         ui.setEnabled(true);
     }
 
@@ -93,8 +111,7 @@ public class Control {
         StartCommand sensor = new StartCommand();
         sensor.setParameters(keyDevice,Integer.parseInt(params.getInterval()),Integer.parseInt(params.getMode()));
         sensor.execute();
-        String results = (String) sensor.getResults();
-        System.out.println(results);
+        ui.setStatusTag("Sensor Activado");
     }
 
     public boolean isKeyDeviceSet() {
@@ -119,6 +136,7 @@ public class Control {
         uc.setParameters(interval,selected,option);
         uc.execute();
         ui.setEnabled(true);
+        MailSender.getInstance().setActuator(Integer.parseInt(option));
     }
 
 

@@ -33,7 +33,7 @@ public class StartCommand implements Command{
         sensor.setKey(key);
         sensor.setTime(time);
         sensor.setMode(mode);
-        sensor.start();
+        sensor.begin();
     }
 
     @Override

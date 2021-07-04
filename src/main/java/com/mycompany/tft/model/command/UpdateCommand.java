@@ -6,6 +6,7 @@
 package com.mycompany.tft.model.command;
 
 import com.mycompany.tft.api.FileHandler;
+import com.mycompany.tft.objects.Device;
 import com.mycompany.tft.objects.Params;
 import java.io.IOException;
 
@@ -19,7 +20,7 @@ public class UpdateCommand implements Command{
 
     @Override
     public void setParameters(Object... args) {
-        this.params= new Params(((String) args[0]),((String) args[1]),((String) args[2]));
+        this.params= new Params(((String) args[0]),((Device) args[1]),((String) args[2]));
     }
 
     @Override

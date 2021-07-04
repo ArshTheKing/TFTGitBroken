@@ -21,7 +21,7 @@ public class StopCommand implements Command{
 
     @Override
     public void execute() {
-        instance.exit();
+        instance.sleep();
     }
 
     @Override

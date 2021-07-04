@@ -7,6 +7,8 @@ package com.mycompany.tft.api;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.bluetooth.BluetoothStateException;
 import javax.bluetooth.DeviceClass;
 import javax.bluetooth.DiscoveryAgent;
@@ -22,6 +24,8 @@ import javax.microedition.io.Connector;
  * @author AZAEL
  */
 public class SearchDevice {
+    private static DiscoveryListener search;
+    private static DiscoveryListener searchDevice;
     public static final ArrayList/*<RemoteDevice>*/ devicesDiscovered = new ArrayList();
     private static final boolean[] present=new boolean[]{false};
     
@@ -60,6 +64,7 @@ public class SearchDevice {
         };
 
         synchronized(inquiryCompletedEvent) {
+            search=listener;
             boolean started = LocalDevice.getLocalDevice().getDiscoveryAgent().startInquiry(DiscoveryAgent.GIAC, listener);
             if (started) {
                 System.out.println("wait for device inquiry to complete...");
@@ -111,6 +116,7 @@ public class SearchDevice {
         };
 
         synchronized(inquiryCompletedEvent) {
+            searchDevice=listener;
             boolean started = LocalDevice.getLocalDevice().getDiscoveryAgent().startInquiry(DiscoveryAgent.GIAC, listener);
             if (started) {
                 System.out.println("wait for device inquiry to complete...");
@@ -118,5 +124,21 @@ public class SearchDevice {
             }
         }
         return present[0];
+    }
+    
+    public static void cancelInquiry(int inquiry){
+        if(inquiry==0){
+            try {
+                LocalDevice.getLocalDevice().getDiscoveryAgent().cancelInquiry(search);
+            } catch (BluetoothStateException ex) {
+            }
+        } else {
+            try {
+                LocalDevice.getLocalDevice().getDiscoveryAgent().cancelInquiry(searchDevice);
+            } catch (BluetoothStateException ex) {
+            }
+            
+        }
+        
     }
 }
