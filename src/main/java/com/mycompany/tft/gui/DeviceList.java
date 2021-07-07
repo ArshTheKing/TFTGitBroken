@@ -11,6 +11,9 @@ import com.mycompany.tft.ctl.Control;
 import com.mycompany.tft.model.command.SearchCommand;
 import com.mycompany.tft.objects.Device;
 import java.awt.Frame;
+import java.awt.Image;
+import java.awt.Toolkit;
+import static java.lang.Thread.sleep;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,17 +45,20 @@ public class DeviceList extends javax.swing.JDialog {
     public DeviceList(java.awt.Frame parent, boolean modal, ArrayList<Device> dev, int mode) {
         super(parent, modal);
         initComponents();
+        this.setIconImage(CustomIcon.getIcon());
+        jLabel1.setText("");
         myself=this;
         this.mode=mode;
         parent.setEnabled(false);
         this.dev=dev;
         defaultListModel = new DefaultListModel<String>();
+        for (Device device : dev) defaultListModel.addElement(device.getName());
         jList1.setModel(defaultListModel);
         jList1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);  
         this.setLocationRelativeTo(parent);
         this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         wT = new workingThread();
-        wT.tr.start();
+        if(mode==0)wT.tr.start();
         jList1.setMaximumSize(jList1.getSize());
         this.setVisible(true);
     }
@@ -73,9 +79,9 @@ public class DeviceList extends javax.swing.JDialog {
         */
     }
     public void searchEnd(){
-        myself=null;
         wT.searching=false;
         jLabel1.setText("");
+        myself=null;
     }
     
 
@@ -123,15 +129,15 @@ public class DeviceList extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButton1)
-                        .addGap(74, 74, 74)
+                        .addGap(79, 79, 79)
                         .addComponent(jButton2)
-                        .addGap(36, 36, 36)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(39, 39, 39))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -152,7 +158,6 @@ public class DeviceList extends javax.swing.JDialog {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         int index=jList1.getSelectedIndex();
         if(index!=-1){
-        
             switch (mode){
                 case 0: new EmailDialog((Frame) this.getParent(), true, dev.get(index)).setLocationRelativeTo(this);
                         Control.getInstance().saveDevice(dev.get(jList1.getSelectedIndex()));
@@ -171,18 +176,11 @@ public class DeviceList extends javax.swing.JDialog {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         this.setVisible(false);
-        ((MainFrame)this.getParent()).setStatusTag("Deteniendo busqueda");
-        switch (mode){
-                case 0: SearchDevice.cancelInquiry(0);
-                        break;
-                case 1: Control.getInstance().setKeyDevice(dev.get(jList1.getSelectedIndex()));;
-                        break;
-                case 2: ((Config) this.getParent()).setDevice(dev.get(jList1.getSelectedIndex()));
-                        break;
-                default: this.getParent().setEnabled(true);
-                        ((JFrame) this.getParent()).toFront();
-                        break;
-            };
+        ((Frame) this.getParent()).toFront();
+        if(mode==0&&wT.tr.isAlive()){
+            new cancelThread().tr.start();
+            SearchDevice.cancelInquiry(0);
+        }
             searchEnd();
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -209,6 +207,33 @@ private class workingThread{
                     case 1:jLabel1.setText("Buscando..");
                         break;
                     case 2:jLabel1.setText("Buscando...");
+                        break;
+                }
+                try {
+                    sleep(1000);
+                } catch (Exception e) {
+                }
+            }
+        }
+    };
+    
+    
+}
+private class cancelThread{
+    private int frame=0;
+    private boolean searching=true;
+    private MainFrame fm=((MainFrame) myself.getParent());
+    public Thread tr=new Thread(){
+        @Override
+        public void run() {
+            while(searching){
+                frame=((frame+1)%3);
+                switch(frame){
+                    case 0:fm.setStatusTag("Deteniendo busqueda.");;
+                        break;
+                    case 1:fm.setStatusTag("Deteniendo busqueda..");
+                        break;
+                    case 2:fm.setStatusTag("Deteniendo busqueda...");
                         break;
                 }
                 try {

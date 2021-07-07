@@ -9,6 +9,8 @@ import com.mycompany.tft.ctl.Control;
 import com.mycompany.tft.objects.Device;
 import com.mycompany.tft.objects.Params;
 import java.awt.Component;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.util.Enumeration;
 import javax.swing.AbstractButton;
 
@@ -25,6 +27,7 @@ public class Config extends javax.swing.JFrame {
      */
     public Config(Params params) {
         initComponents();
+        this.setIconImage(CustomIcon.getIcon());
         this.setLocationRelativeTo(null);
         enableDeviceSelection(false);
         jSlider1.setValue(Integer.parseInt(params.getInterval()));
