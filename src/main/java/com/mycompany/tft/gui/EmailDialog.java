@@ -6,6 +6,7 @@
 
 package com.mycompany.tft.gui;
 
+import com.mycompany.tft.api.SearchDevice;
 import com.mycompany.tft.ctl.Control;
 import com.mycompany.tft.objects.Device;
 import javax.mail.internet.AddressException;
@@ -106,6 +107,7 @@ public class EmailDialog extends javax.swing.JDialog {
         else {
             dev.setMail(text);
             Control.getInstance().saveDevice(dev);
+            SearchDevice.cancelInquiry(0);
             this.getParent().setEnabled(true);
             this.dispose();
         }

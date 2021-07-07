@@ -5,14 +5,23 @@
  */
 package com.mycompany.tft.gui;
 
+import com.mycompany.tft.api.SearchDevice;
+import com.mycompany.tft.api.Sensor;
 import com.mycompany.tft.ctl.Control;
+import com.mycompany.tft.model.command.SearchCommand;
 import com.mycompany.tft.objects.Device;
 import java.awt.Frame;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.plaf.basic.BasicListUI;
+import javax.swing.plaf.basic.BasicListUI.ListDataHandler;
 
 /**
  *
@@ -20,30 +29,53 @@ import javax.swing.ListSelectionModel;
  */
 public class DeviceList extends javax.swing.JDialog {
 
-    private final ArrayList<Device> dev;
+    private static ArrayList<Device> dev;
     private final int mode;
     private Object msg;
+    private static DeviceList myself;
+    private final DefaultListModel<String> defaultListModel;
+    private final workingThread wT;
 
     /**
      * Creates new form DeviceList
      */
     public DeviceList(java.awt.Frame parent, boolean modal, ArrayList<Device> dev, int mode) {
         super(parent, modal);
+        initComponents();
+        myself=this;
         this.mode=mode;
         parent.setEnabled(false);
         this.dev=dev;
-        initComponents();
-        String[] strings = new String[dev.size()];
-        for (int i = 0; i < strings.length; i++) {
-            strings[i]=dev.get(i).getName();
-        }
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
+        defaultListModel = new DefaultListModel<String>();
+        jList1.setModel(defaultListModel);
         jList1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);  
         this.setLocationRelativeTo(parent);
+        this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        wT = new workingThread();
+        wT.tr.start();
+        jList1.setMaximumSize(jList1.getSize());
         this.setVisible(true);
+    }
+    
+    public static DeviceList getInstance(){
+        return (myself==null) ? null: myself;
+    }
+    public void addDev(Device newDev){
+        dev.add(newDev);
+        defaultListModel.addElement(newDev.getName());
+        //jList1.ensureIndexIsVisible(dev.size());
+        /*
+        jList1.updateUI();
+        this.validate();
+        this.repaint();
+        jList1.paintImmediately(jList1.getVisibleRect());
+        this.validate();
+        */
+    }
+    public void searchEnd(){
+        myself=null;
+        wT.searching=false;
+        jLabel1.setText("");
     }
     
 
@@ -60,6 +92,7 @@ public class DeviceList extends javax.swing.JDialog {
         jList1 = new javax.swing.JList<>();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -79,32 +112,38 @@ public class DeviceList extends javax.swing.JDialog {
             }
         });
 
+        jLabel1.setText("Buscando");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(130, 130, 130)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton1)
-                        .addGap(114, 114, 114)
-                        .addComponent(jButton2)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(74, 74, 74)
+                        .addComponent(jButton2)
+                        .addGap(36, 36, 36)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addContainerGap(20, Short.MAX_VALUE))
+                    .addComponent(jButton2)
+                    .addComponent(jLabel1))
+                .addGap(26, 26, 26))
         );
 
         pack();
@@ -125,19 +164,61 @@ public class DeviceList extends javax.swing.JDialog {
                 default: ;
                         break;
             };
+            searchEnd();
             this.dispose();
         } else JOptionPane.showMessageDialog(this, msg);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        Control.getInstance().enableUI();
+        this.setVisible(false);
+        ((MainFrame)this.getParent()).setStatusTag("Deteniendo busqueda");
+        switch (mode){
+                case 0: SearchDevice.cancelInquiry(0);
+                        break;
+                case 1: Control.getInstance().setKeyDevice(dev.get(jList1.getSelectedIndex()));;
+                        break;
+                case 2: ((Config) this.getParent()).setDevice(dev.get(jList1.getSelectedIndex()));
+                        break;
+                default: this.getParent().setEnabled(true);
+                        ((JFrame) this.getParent()).toFront();
+                        break;
+            };
+            searchEnd();
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JList<String> jList1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+
+private class workingThread{
+    private int frame=0;
+    private boolean searching=true;
+    public Thread tr=new Thread(){
+        @Override
+        public void run() {
+            while(searching){
+                frame=((frame+1)%3);
+                switch(frame){
+                    case 0:jLabel1.setText("Buscando.");
+                        break;
+                    case 1:jLabel1.setText("Buscando..");
+                        break;
+                    case 2:jLabel1.setText("Buscando...");
+                        break;
+                }
+                try {
+                    sleep(1000);
+                } catch (Exception e) {
+                }
+            }
+        }
+    };
+    
+    
+}
 }

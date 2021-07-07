@@ -5,10 +5,10 @@
  */
 package com.mycompany.tft.api;
 
+import com.mycompany.tft.gui.DeviceList;
+import com.mycompany.tft.objects.Device;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.bluetooth.BluetoothStateException;
 import javax.bluetooth.DeviceClass;
 import javax.bluetooth.DiscoveryAgent;
@@ -46,6 +46,11 @@ public class SearchDevice {
                     String substring = ex.getLocalizedMessage().substring(ex.getLocalizedMessage().indexOf("[")+1,ex.getLocalizedMessage().indexOf("]"));
                     if(substring.equals(10064+"")) 
                     devicesDiscovered.add(btDevice);
+                    try {
+                        DeviceList.getInstance().addDev(new Device(btDevice.getBluetoothAddress(), btDevice.getFriendlyName(true), null));
+                    } catch (IOException ex1) {
+                        
+                    }
                 }
             }
 
@@ -72,6 +77,7 @@ public class SearchDevice {
                 System.out.println(devicesDiscovered.size() +  " device(s) found");
             }
         }
+        DeviceList.getInstance().searchEnd();
         return devicesDiscovered;
     }
 
@@ -130,12 +136,12 @@ public class SearchDevice {
         if(inquiry==0){
             try {
                 LocalDevice.getLocalDevice().getDiscoveryAgent().cancelInquiry(search);
-            } catch (BluetoothStateException ex) {
+            } catch (Exception ex) {
             }
         } else {
             try {
                 LocalDevice.getLocalDevice().getDiscoveryAgent().cancelInquiry(searchDevice);
-            } catch (BluetoothStateException ex) {
+            } catch (Exception ex) {
             }
             
         }

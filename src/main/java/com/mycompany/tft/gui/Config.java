@@ -11,8 +11,6 @@ import com.mycompany.tft.objects.Params;
 import java.awt.Component;
 import java.util.Enumeration;
 import javax.swing.AbstractButton;
-import javax.swing.ButtonModel;
-import javax.swing.JRadioButton;
 
 /**
  *
@@ -27,6 +25,7 @@ public class Config extends javax.swing.JFrame {
      */
     public Config(Params params) {
         initComponents();
+        this.setLocationRelativeTo(null);
         enableDeviceSelection(false);
         jSlider1.setValue(Integer.parseInt(params.getInterval()));
         jLabel5.setText(String.valueOf(jSlider1.getValue())+" s");
@@ -34,6 +33,7 @@ public class Config extends javax.swing.JFrame {
         if(loaded!=null) {
             jTextField1.setText(loaded.getName());
             jCheckBox2.setSelected(true);
+            for (Component component : jPanel1.getComponents()) component.setEnabled(true);
         }
         switch(params.getMode()){
             case "0":buttonGroup1.setSelected(jRadioButton2.getModel(), true);

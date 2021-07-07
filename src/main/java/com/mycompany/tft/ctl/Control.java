@@ -15,6 +15,9 @@ import com.mycompany.tft.objects.Device;
 import com.mycompany.tft.objects.Params;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -51,11 +54,24 @@ public class Control {
     
     public void searchDevice() {
         ui.setStatusTag("Searching devices");
+        
         SearchCommand sC = new SearchCommand();
         sC.setParameters();
-        sC.execute();
+        new Thread(){
+            public void run() {
+                super.run();
+                try {
+                    sleep(500);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Control.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                sC.execute();
+            }
+        }.start();
+        new DeviceList(ui, true, new ArrayList<Device>(), 0);
+        
         ui.setEnabled(false);
-        Object results =sC.getResults();
+        /*Object results =sC.getResults();
         if(results instanceof Exception) System.out.println("Exepcion: "+ ((Exception) results).getMessage());
         if(!((ArrayList) results).isEmpty()) 
                 new DeviceList(ui, true, (ArrayList<Device>) results,0);
@@ -66,7 +82,7 @@ public class Control {
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
-        }
+        }*/
         ui.setStatusTag("Ocioso");
         ui.setEnabled(true);
     }

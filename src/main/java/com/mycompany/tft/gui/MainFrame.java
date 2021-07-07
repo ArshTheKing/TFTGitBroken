@@ -40,11 +40,13 @@ public class MainFrame extends javax.swing.JFrame {
             jButton3.setText("Activar sensor");
             ctl.stopSensor();
             jButton2.setEnabled(true);
+            jButton4.setEnabled(true);
         } else {
             jButton3.setText("Desactivar sensor");
             sensorMode=true;
             if(ctl.isKeyDeviceSet()==false) ctl.selectKeyDevice();
             jButton2.setEnabled(false);
+            jButton4.setEnabled(false);
             this.toFront();
             this.setEnabled(true);
             ctl.startSensor();
