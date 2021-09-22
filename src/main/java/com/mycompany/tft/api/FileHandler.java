@@ -80,8 +80,9 @@ public class FileHandler {
         String line = reader.readLine();
         String interval = line;
         line = reader.readLine();
+        System.out.println(line);
         Device selected;
-        if(line.equals("null")) 
+        if(line==null) 
             selected=null;
         else{
             String[] split = line.split(";");

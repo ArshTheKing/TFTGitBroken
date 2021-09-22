@@ -1,14 +1,4 @@
-
-import com.intel.bluetooth.RemoteDeviceHelper;
-import com.mycompany.tft.api.FileHandler;
-import com.mycompany.tft.model.command.*;
 import com.mycompany.tft.ctl.Control;
-import com.mycompany.tft.objects.Device;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.bluetooth.RemoteDevice;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -21,9 +11,8 @@ import javax.bluetooth.RemoteDevice;
  * @author AZAEL
  */
 public class Main {
-    public static void main(String[] args) throws IOException{
-        
-        Control instance = Control.getInstance();
+    public static void main(String[] args) {
+        Control.getInstance();
         
         /*FileHandler fileHandler = new FileHandler();
         fileHandler.writeDevice(new Device("1", "algo", "distinto"));

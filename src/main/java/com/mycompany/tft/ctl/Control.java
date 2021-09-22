@@ -5,6 +5,7 @@
  */
 package com.mycompany.tft.ctl;
 
+import com.mycompany.tft.api.ExtraMethods;
 import com.mycompany.tft.api.FileHandler;
 import com.mycompany.tft.api.MailSender;
 import com.mycompany.tft.gui.Config;
@@ -17,7 +18,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.SwingUtilities;
 
 /**
  *
@@ -25,6 +25,7 @@ import javax.swing.SwingUtilities;
  */
 public class Control {
     private static Control myself;
+    private static String localName;
     private static MainFrame ui;
     private static ArrayList<Device> dev=new ArrayList<>();
     private Device keyDevice;
@@ -46,6 +47,7 @@ public class Control {
         } catch (IOException ex) {
             System.out.println("Error al leer los archivos");
         }
+        ui.showBTEnableDialog();
     }
     
     public static Control getInstance(){
@@ -168,5 +170,13 @@ public class Control {
     public void enableUI() {
         ui.setEnabled(true);
         ui.toFront();
+    }
+
+    public String getLocalName() {
+        if(localName==null){
+            String name = ExtraMethods.getLocalName();
+            if(!name.equals(ExtraMethods.BLUETOOTH_DISCONNECTED)) localName=name;
+        }
+        return localName;
     }
 }

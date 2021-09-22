@@ -6,6 +6,7 @@
 package com.mycompany.tft.gui;
 
 import com.mycompany.tft.ctl.Control;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -19,7 +20,10 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import org.imgscalr.Scalr;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 /**
  *
@@ -198,7 +202,18 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        ctl.searchDevice();
+        JDialog linking = new JDialog(this);
+        JPanel p1 = new JPanel(new BorderLayout());
+        p1.add(new JLabel("Por favor, connecte con la aplicación BluetoothLock"), BorderLayout.CENTER);
+        p1.add(new JLabel(Control.getInstance().getLocalName()), BorderLayout.CENTER);
+        linking.setUndecorated(true);
+        linking.getContentPane().add(p1);
+        //linking.pack();
+        linking.setLocationRelativeTo(this);
+        linking.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        linking.setModal(true);
+        linking.setVisible(true);
+        //ctl.searchDevice();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -210,7 +225,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        ctl.config();
+        //ctl.config();
     }//GEN-LAST:event_jButton4ActionPerformed
 
 
@@ -225,6 +240,14 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
+    public void showBTEnableDialog() {
+        while(Control.getInstance().getLocalName()==null){
+            JOptionPane.showMessageDialog(this, "Por favor active la funcionalidad bluetooth del dispositivo");
+            
+        }
+        
+    }
+
 
 }
     
