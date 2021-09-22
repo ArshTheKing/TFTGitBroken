@@ -18,12 +18,17 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
 
 /**
  *
@@ -202,17 +207,22 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        JDialog linking = new JDialog(this);
-        JPanel p1 = new JPanel(new BorderLayout());
-        p1.add(new JLabel("Por favor, connecte con la aplicación BluetoothLock"), BorderLayout.CENTER);
-        p1.add(new JLabel(Control.getInstance().getLocalName()), BorderLayout.CENTER);
-        linking.setUndecorated(true);
-        linking.getContentPane().add(p1);
-        //linking.pack();
+        Linking linking = new Linking();
         linking.setLocationRelativeTo(this);
-        linking.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-        linking.setModal(true);
         linking.setVisible(true);
+        SwingWorker<String, Void> worker = new SwingWorker<String, Void>() {
+            @Override
+            protected String doInBackground() throws InterruptedException {
+                Thread.sleep(5000);
+                linking.dispose();
+                return null;
+            }
+            @Override
+            protected void done() {
+            }
+        };
+        worker.execute(); 
+        
         //ctl.searchDevice();
     }//GEN-LAST:event_jButton1ActionPerformed
 

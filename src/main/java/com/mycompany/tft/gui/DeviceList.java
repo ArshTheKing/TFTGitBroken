@@ -6,25 +6,14 @@
 package com.mycompany.tft.gui;
 
 import com.mycompany.tft.api.SearchDevice;
-import com.mycompany.tft.api.Sensor;
 import com.mycompany.tft.ctl.Control;
-import com.mycompany.tft.model.command.SearchCommand;
 import com.mycompany.tft.objects.Device;
 import java.awt.Frame;
-import java.awt.Image;
-import java.awt.Toolkit;
 import static java.lang.Thread.sleep;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
-import javax.swing.plaf.basic.BasicListUI;
-import javax.swing.plaf.basic.BasicListUI.ListDataHandler;
 
 /**
  *

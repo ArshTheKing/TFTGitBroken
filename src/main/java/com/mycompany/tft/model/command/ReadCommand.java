@@ -9,8 +9,6 @@ import com.mycompany.tft.api.FileHandler;
 import com.mycompany.tft.objects.Device;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *

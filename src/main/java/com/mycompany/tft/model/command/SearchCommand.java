@@ -7,11 +7,7 @@ package com.mycompany.tft.model.command;
 
 import com.mycompany.tft.api.SearchDevice;
 import com.mycompany.tft.objects.Device;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.bluetooth.BluetoothStateException;
 import javax.bluetooth.RemoteDevice;
 
 /**

@@ -179,4 +179,8 @@ public class Control {
         }
         return localName;
     }
+
+    public Object getKeyDevice() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

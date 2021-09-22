@@ -9,8 +9,6 @@ package com.mycompany.tft.gui;
 import com.mycompany.tft.api.SearchDevice;
 import com.mycompany.tft.ctl.Control;
 import com.mycompany.tft.objects.Device;
-import java.awt.Image;
-import java.awt.Toolkit;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.swing.JOptionPane;

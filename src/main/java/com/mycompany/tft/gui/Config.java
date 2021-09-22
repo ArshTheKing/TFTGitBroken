@@ -9,8 +9,6 @@ import com.mycompany.tft.ctl.Control;
 import com.mycompany.tft.objects.Device;
 import com.mycompany.tft.objects.Params;
 import java.awt.Component;
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.util.Enumeration;
 import javax.swing.AbstractButton;
 
