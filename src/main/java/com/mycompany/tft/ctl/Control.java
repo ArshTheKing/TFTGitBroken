@@ -5,19 +5,25 @@
  */
 package com.mycompany.tft.ctl;
 
+import com.mycompany.tft.api.ConnectionSensor;
 import com.mycompany.tft.api.ExtraMethods;
 import com.mycompany.tft.api.FileHandler;
 import com.mycompany.tft.api.MailSender;
 import com.mycompany.tft.gui.Config;
 import com.mycompany.tft.gui.DeviceList;
+import com.mycompany.tft.gui.Linking;
 import com.mycompany.tft.gui.MainFrame;
 import com.mycompany.tft.model.command.*;
 import com.mycompany.tft.objects.Device;
 import com.mycompany.tft.objects.Params;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.bluetooth.RemoteDevice;
+import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
 
 /**
  *
@@ -30,11 +36,16 @@ public class Control {
     private static ArrayList<Device> dev=new ArrayList<>();
     private Device keyDevice;
     private Params params;
+    private RemoteDevice key;
+    private InputStream connection;
     
     private Control(){
         this.myself=this;
         ui=new MainFrame(this);
-        try {
+        ui.setEnabled(false);
+        getLocalName();
+        ui.setEnabled(true);
+        /*try {
             dev=FileHandler.readDevice();
             params= FileHandler.readConfig();
             keyDevice=params.getKey();
@@ -47,7 +58,7 @@ public class Control {
         } catch (IOException ex) {
             System.out.println("Error al leer los archivos");
         }
-        ui.showBTEnableDialog();
+        */
     }
     
     public static Control getInstance(){
@@ -55,38 +66,30 @@ public class Control {
     }
     
     public void searchDevice() {
-        ui.setStatusTag("Searching devices");
-        
-        SearchCommand sC = new SearchCommand();
-        sC.setParameters();
+        ui.setEnabled(false);
+        Linking linking= Linking.getIntance();
+        linking.setLocationRelativeTo(ui);
+        ConnectionSensor sensor = ConnectionSensor.getInstance();
+        sensor.start();
         new Thread(){
+            @Override
             public void run() {
-                super.run();
                 try {
-                    sleep(500);
+                    Thread.sleep(1000*10);
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(Control.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                sC.execute();
             }
         }.start();
-        new DeviceList(ui, true, new ArrayList<Device>(), 0);
-        
-        ui.setEnabled(false);
-        /*Object results =sC.getResults();
-        if(results instanceof Exception) System.out.println("Exepcion: "+ ((Exception) results).getMessage());
-        if(!((ArrayList) results).isEmpty()) 
-                new DeviceList(ui, true, (ArrayList<Device>) results,0);
-        else {
-            ui.setStatusTag("Ningun dispositivo encontrado");
-            try {
-                Thread.sleep(3 * 1000);
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            }
-        }*/
-        ui.setStatusTag("Ocioso");
-        ui.setEnabled(true);
+        try {
+            sensor.join(1000*10);
+        } catch (InterruptedException ex) {
+        }
+        if(ConnectionSensor.getInstance().isAlive()){
+            linking.dispose();
+            JOptionPane.showMessageDialog(ui, "No se detecta ningun dispositivo, vuelva a intentarlo");
+            sensor.stop();
+        } 
+        enableUI();
     }
     
     public void saveDevice(Device dev){
@@ -97,7 +100,6 @@ public class Control {
        this.dev.add(dev);
     }
     
-
     public void selectKeyDevice() {
         ReadCommand rc = new ReadCommand();
         rc.setParameters();
@@ -180,7 +182,14 @@ public class Control {
         return localName;
     }
 
-    public Object getKeyDevice() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+    public void showBTDisconnected() {
+        while(Control.getInstance().getLocalName()==null)
+            JOptionPane.showMessageDialog(ui, "Por favor active la funcionalidad bluetooth del dispositivo");
+    }
+
+    public void setConnection(RemoteDevice rd, InputStream stream) {
+        this.key=rd;
+        this.connection=stream;
     }
 }

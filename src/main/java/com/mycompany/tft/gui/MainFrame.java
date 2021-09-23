@@ -207,23 +207,13 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Linking linking = new Linking();
-        linking.setLocationRelativeTo(this);
-        linking.setVisible(true);
-        SwingWorker<String, Void> worker = new SwingWorker<String, Void>() {
+        new SwingWorker<Object, Object>(){
             @Override
-            protected String doInBackground() throws InterruptedException {
-                Thread.sleep(5000);
-                linking.dispose();
+            protected Object doInBackground() throws Exception {
+                ctl.searchDevice();
                 return null;
             }
-            @Override
-            protected void done() {
-            }
-        };
-        worker.execute(); 
-        
-        //ctl.searchDevice();
+        }.execute();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -250,14 +240,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
-    public void showBTEnableDialog() {
-        while(Control.getInstance().getLocalName()==null){
-            JOptionPane.showMessageDialog(this, "Por favor active la funcionalidad bluetooth del dispositivo");
-            
-        }
-        
-    }
-
-
+    
 }
     
