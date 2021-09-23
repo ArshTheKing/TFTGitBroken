@@ -6,6 +6,7 @@
 package com.mycompany.tft.ctl;
 
 import com.mycompany.tft.api.ConnectionSensor;
+import com.mycompany.tft.api.DataSensor;
 import com.mycompany.tft.api.ExtraMethods;
 import com.mycompany.tft.api.FileHandler;
 import com.mycompany.tft.api.MailSender;
@@ -19,11 +20,8 @@ import com.mycompany.tft.objects.Params;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.bluetooth.RemoteDevice;
 import javax.swing.JOptionPane;
-import javax.swing.SwingWorker;
 
 /**
  *
@@ -128,10 +126,9 @@ public class Control {
     }
 
     public void startSensor() {
-        StartCommand sensor = new StartCommand();
-        sensor.setParameters(keyDevice,Integer.parseInt(params.getInterval()),Integer.parseInt(params.getMode()));
-        sensor.execute();
-        ui.setStatusTag("Sensor Activado");
+        DataSensor sensor = DataSensor.getInstance();
+        sensor.setKey(connection);
+        sensor.begin(connection);
     }
 
     public boolean isKeyDeviceSet() {
@@ -191,5 +188,13 @@ public class Control {
     public void setConnection(RemoteDevice rd, InputStream stream) {
         this.key=rd;
         this.connection=stream;
+        DataSensor sensor = DataSensor.getInstance();
+        sensor.setKey(stream);
+        sensor.begin(stream);
     }
+
+    public void updateBattery(int batteryLvl) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

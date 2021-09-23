@@ -5,6 +5,7 @@
  */
 package com.mycompany.tft.api;
 
+import com.mycompany.tft.ctl.Control;
 /*import actuator.Actuator;
 import actuator.NetworkShutdownActuator;
 import actuator.ShutdownActuator;
@@ -26,14 +27,14 @@ public class DataSensor extends Thread{
     //private Actuator action;
     private boolean exit;
     private InputStream deviceStream;
+    private int batteryLvl;
 
-    private DataSensor(InputStream stream, int actuator) {
+    private DataSensor(int actuator) {
         super();
-        this.deviceStream = stream;
         setAction(actuator);
     }
     public static DataSensor getInstance(){
-        return (myself==null) ? myself=new DataSensor(null,0): myself;
+        return (myself==null) ? myself=new DataSensor(0): myself;
     }
 
     private void setAction(int actuator) {
@@ -47,7 +48,7 @@ public class DataSensor extends Thread{
         }*/
     }
     
-    public void setKey(Stream stream) {
+    public void setKey(InputStream stream) {
         this.deviceStream = (InputStream) stream;
     }
 
@@ -63,8 +64,13 @@ public class DataSensor extends Thread{
                 byte[] b= new byte[1024];
                 int read = deviceStream.read(b,0,4);
                 if(read==-1) System.out.println("Device dc");
-                System.out.println(new String(b)); 
-                //Control.updateUIBatLvl(new String(b));
+                System.out.println(new String(b));
+                int tmp = Integer.parseInt(new String(b));
+                if (tmp!=batteryLvl) {
+                    batteryLvl=tmp;
+                    Control.getInstance().updateBattery(batteryLvl);
+                }
+//Control.updateUIBatLvl(new String(b));
             }
         } catch (IOException ex) {
             Logger.getLogger(DataSensor.class.getName()).log(Level.SEVERE, null, ex);
