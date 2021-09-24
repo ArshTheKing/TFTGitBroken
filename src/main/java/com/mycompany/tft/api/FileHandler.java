@@ -42,6 +42,7 @@ public class FileHandler {
             (new File(dirPath)).mkdirs();
             try {
                 paramFile.createNewFile();
+                writeConfig("admin", "admin", "2");
             } catch (IOException ex) {
                 Logger.getLogger(FileHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -95,18 +96,17 @@ public class FileHandler {
         
     }
     
-    public static void writeConfig(String interval, Device selected, String option) throws IOException {
+    public static void writeConfig(String user, String pass, String option) throws IOException {
         FileWriter fileWriter;
             fileWriter = new FileWriter(paramFile);
         
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter, 10);
-        String[] param=new String[]{interval,"null",option};
-        if(selected!=null)param[1]=selected.getId()+";"+selected.getName()+";"+selected.getMail();
-        for (String string : param) {
-            System.out.println(string);
-            bufferedWriter.write(string);
-            bufferedWriter.newLine();
-        }
+        bufferedWriter.write(user);
+        bufferedWriter.newLine();
+        bufferedWriter.write(pass);
+        bufferedWriter.newLine();
+        bufferedWriter.write(option);
+        bufferedWriter.newLine();
         bufferedWriter.close();
     }
     

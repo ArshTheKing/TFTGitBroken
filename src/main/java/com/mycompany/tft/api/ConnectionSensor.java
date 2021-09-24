@@ -55,4 +55,5 @@ public class ConnectionSensor extends Thread{
             Logger.getLogger(ConnectionSensor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
 }

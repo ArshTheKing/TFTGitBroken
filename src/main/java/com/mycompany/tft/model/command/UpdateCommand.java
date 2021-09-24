@@ -26,7 +26,7 @@ public class UpdateCommand implements Command{
     @Override
     public void execute() {
         try {
-            FileHandler.writeConfig(params.getInterval(), params.getKey(),params.getMode());
+            FileHandler.writeConfig(params.getInterval(), params.getKey().getId(),params.getMode());
         } catch (IOException ex) {
             exception=ex;
         }

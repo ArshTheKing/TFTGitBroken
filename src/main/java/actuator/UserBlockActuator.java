@@ -5,7 +5,7 @@
  */
 package actuator;
 
-import java.io.IOException;
+import com.mycompany.tft.api.LockScreen;
 
 /**
  *
@@ -15,12 +15,7 @@ public class UserBlockActuator implements Actuator{
 
     @Override
     public void actuate() {
-        try {
-            Runtime rt = Runtime.getRuntime();
-            Process pr = rt.exec("C:\\Windows\\System32\\rundll32.exe user32.dll,LockWorkStation");
-        } catch (IOException ex) {
-            this.actuate();
-        }
+        LockScreen lockScreen = new LockScreen();
     }
     
 }

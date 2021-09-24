@@ -17,9 +17,12 @@ import com.mycompany.tft.gui.MainFrame;
 import com.mycompany.tft.model.command.*;
 import com.mycompany.tft.objects.Device;
 import com.mycompany.tft.objects.Params;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.bluetooth.RemoteDevice;
 import javax.swing.JOptionPane;
 
@@ -43,20 +46,20 @@ public class Control {
         ui.setEnabled(false);
         getLocalName();
         ui.setEnabled(true);
-        /*try {
+        try {
             dev=FileHandler.readDevice();
-            params= FileHandler.readConfig();
-            keyDevice=params.getKey();
+            //params= FileHandler.readConfig();
+            //keyDevice=params.getKey();
+            /*
             if(keyDevice!=null)
             {
                 ui.setKeyDeviceTag(keyDevice.getName());
                 MailSender.getInstance().setMail(keyDevice.getMail());
             }
-            else ui.setKeyDeviceTag("Ninguno");
+            else ui.setKeyDeviceTag("Ninguno");*/
         } catch (IOException ex) {
             System.out.println("Error al leer los archivos");
         }
-        */
     }
     
     public static Control getInstance(){
@@ -69,25 +72,24 @@ public class Control {
         linking.setLocationRelativeTo(ui);
         ConnectionSensor sensor = ConnectionSensor.getInstance();
         sensor.start();
-        new Thread(){
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(1000*10);
-                } catch (InterruptedException ex) {
-                }
-            }
-        }.start();
         try {
-            sensor.join(1000*10);
+            sensor.join(1000*60);
         } catch (InterruptedException ex) {
         }
-        if(ConnectionSensor.getInstance().isAlive()){
+        if(ConnectionSensor.getInstance().isAlive()&&connection==null){
             linking.dispose();
             JOptionPane.showMessageDialog(ui, "No se detecta ningun dispositivo, vuelva a intentarlo");
             sensor.stop();
         } 
         enableUI();
+    }
+    
+    public void saveConfig(String user, String pass, String option) {
+        try {
+            FileHandler.writeConfig(user, pass, option);
+        } catch (IOException ex) {
+            saveConfig(user, pass, option);
+        }
     }
     
     public void saveDevice(Device dev){
@@ -189,12 +191,39 @@ public class Control {
         this.key=rd;
         this.connection=stream;
         DataSensor sensor = DataSensor.getInstance();
+        loadEmail(); 
         sensor.setKey(stream);
         sensor.begin(stream);
+        Linking.getIntance().dispose();
     }
 
     public void updateBattery(int batteryLvl) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ui.setStatusTag(batteryLvl+"");
     }
+
+    private void loadEmail() {
+        Device save = null;
+        for (Device device : Control.dev) {
+            if(device.getId().equals(this.key.getBluetoothAddress())) {
+                save=device;
+                break;
+            }
+        }
+        if(save!=null) setKeyDevice(save);
+        else registerDevice();
+    }
+
+    private void registerDevice() {
+        try {
+            Linking.getIntance().dispose();
+            String mail = JOptionPane.showInputDialog(ui, "No hay registros del dispositivo, por favor introduzca un e-mail:");
+            Device device = new Device(key.getBluetoothAddress(), key.getFriendlyName(true), mail);
+            saveDevice(device);
+            setKeyDevice(device);
+        } catch (IOException ex) {
+            Logger.getLogger(Control.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 
 }

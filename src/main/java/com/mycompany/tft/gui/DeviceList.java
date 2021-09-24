@@ -153,7 +153,7 @@ public class DeviceList extends javax.swing.JDialog {
                          break;
                 case 1: Control.getInstance().setKeyDevice(dev.get(jList1.getSelectedIndex()));;
                         break;
-                case 2: ((Config) this.getParent()).setDevice(dev.get(jList1.getSelectedIndex()));
+                case 2: //((Config) this.getParent()).setDevice(dev.get(jList1.getSelectedIndex()));
                         break;
                 default: ;
                         break;
