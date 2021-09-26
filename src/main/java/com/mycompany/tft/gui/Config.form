@@ -153,9 +153,6 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Desactivar interfaces de red (se reactivar&#xe1; al acercar el dispositivo llave)"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jRadioButton3ActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JRadioButton" name="jRadioButton1">
       <Properties>
