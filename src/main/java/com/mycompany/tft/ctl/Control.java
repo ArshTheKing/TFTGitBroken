@@ -11,11 +11,13 @@ import com.mycompany.tft.api.ExtraMethods;
 import com.mycompany.tft.api.FileHandler;
 import com.mycompany.tft.api.MailSender;
 import com.mycompany.tft.gui.Config;
+import com.mycompany.tft.gui.DeviceList;
 import com.mycompany.tft.gui.Linking;
 import com.mycompany.tft.gui.MainFrame;
 import com.mycompany.tft.model.command.*;
 import com.mycompany.tft.objects.Device;
 import com.mycompany.tft.objects.Params;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -37,7 +39,6 @@ public class Control {
     private Params params;
     private RemoteDevice key;
     private InputStream connection;
-    private DataSensor dataSensor;
     
     private Control(){
         this.myself=this;
@@ -47,57 +48,48 @@ public class Control {
         ui.setEnabled(true);
         try {
             dev=FileHandler.readDevice();
-            params= FileHandler.readConfig();
-            dataSensor= new DataSensor(params.getMode());
+            //params= FileHandler.readConfig();
+            //keyDevice=params.getKey();
+            /*
+            if(keyDevice!=null)
+            {
+                ui.setKeyDeviceTag(keyDevice.getName());
+                MailSender.getInstance().setMail(keyDevice.getMail());
+            }
+            else ui.setKeyDeviceTag("Ninguno");*/
         } catch (IOException ex) {
             System.out.println("Error al leer los archivos");
         }
-        
     }
     
     public static Control getInstance(){
         return (myself==null) ? new Control(): myself;
     }
-
-    public DataSensor getDataSensor() {
-        return dataSensor;
-    }
-
-    public void setDataSensor(DataSensor dataSensor) {
-        this.dataSensor = dataSensor;
-    }
-    
     
     public void searchDevice() {
         ui.setEnabled(false);
-        ui.toFront();
         Linking linking= Linking.getIntance();
         linking.setLocationRelativeTo(ui);
-        linking.setAlwaysOnTop(true);
-        ConnectionSensor sensor = new ConnectionSensor();
+        ConnectionSensor sensor = ConnectionSensor.getInstance();
         sensor.start();
         try {
             sensor.join(1000*60);
         } catch (InterruptedException ex) {
         }
-        if(sensor.isAlive()&&connection==null){
+        if(ConnectionSensor.getInstance().isAlive()&&connection==null){
             linking.dispose();
             JOptionPane.showMessageDialog(ui, "No se detecta ningun dispositivo, vuelva a intentarlo");
             sensor.stop();
-        } else{
-            ui.enableSensor(true);
-            dataSensor.setKey(connection);
-        }
+        } 
         enableUI();
     }
     
     public void saveConfig(String user, String pass, String option) {
         try {
-            this.params=new Params(user, pass, option);
             FileHandler.writeConfig(user, pass, option);
         } catch (IOException ex) {
+            saveConfig(user, pass, option);
         }
-        enableUI();
     }
     
     public void saveDevice(Device dev){
@@ -108,6 +100,15 @@ public class Control {
        this.dev.add(dev);
     }
     
+    public void selectKeyDevice() {
+        ReadCommand rc = new ReadCommand();
+        rc.setParameters();
+        rc.execute();
+        rc.getResults();
+        new DeviceList(ui, true, getDevices(),1);
+        ui.setEnabled(true);
+        ui.toFront();
+    }
     
     public void setKeyDevice(Device dev) {
         this.keyDevice=dev;
@@ -116,17 +117,20 @@ public class Control {
     }
 
     public void stopSensor() {
+        ui.setStatusTag("Parando Sensor");
         ui.setEnabled(false);
+        StopCommand stopCommand = new StopCommand();
+        stopCommand.setParameters();
+        stopCommand.execute();
+        stopCommand.getResults();
+        ui.setStatusTag("Ocioso");
         ui.setEnabled(true);
     }
-    
-    public void enableSensor(boolean b) {
-        dataSensor.setEnable(b);
-    }
-    
+
     public void startSensor() {
-        dataSensor.setKey(connection);
-        dataSensor.begin(connection);
+        DataSensor sensor = DataSensor.getInstance();
+        sensor.setKey(connection);
+        sensor.begin(connection);
     }
 
     public boolean isKeyDeviceSet() {
@@ -137,10 +141,23 @@ public class Control {
         Params readConfig;
         try {
             readConfig = FileHandler.readConfig();
-            new Config(readConfig);
+            Config config = new Config(readConfig);
+            config.setVisible(true);
             ui.setEnabled(false);
-        } catch (IOException ex) {}
+        } catch (IOException ex) {
+            config();
+        }
     }
+
+    public void saveConfig(String interval, Device selected, String option) {
+        params=new Params(interval, keyDevice, option);
+        UpdateCommand uc = new UpdateCommand();
+        uc.setParameters(interval,selected,option);
+        uc.execute();
+        ui.setEnabled(true);
+        MailSender.getInstance().setActuator(Integer.parseInt(option));
+    }
+
 
     public ArrayList<Device> getDevices() {
         if(dev.isEmpty()) try {
@@ -173,14 +190,15 @@ public class Control {
     public void setConnection(RemoteDevice rd, InputStream stream) {
         this.key=rd;
         this.connection=stream;
-        loadEmail();
-        dataSensor.setKey(stream);
-        dataSensor.begin(stream);
+        DataSensor sensor = DataSensor.getInstance();
+        loadEmail(); 
+        sensor.setKey(stream);
+        sensor.begin(stream);
         Linking.getIntance().dispose();
     }
 
     public void updateBattery(int batteryLvl) {
-        ui.setStatusTag(batteryLvl+"",true);
+        ui.setStatusTag(batteryLvl+"");
     }
 
     private void loadEmail() {
@@ -205,21 +223,6 @@ public class Control {
         } catch (IOException ex) {
             Logger.getLogger(Control.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    public Params getParams() {
-        return params;        
-    }
-
-    public void cleanConnection() {
-        //TODO 
-        //DataSensor.getInstance().setEnable(false);
-    }
-
-    public void rebootSensor() {
-        ui.dispose();
-        ui=new MainFrame(this);
-        new Control();
     }
 
 

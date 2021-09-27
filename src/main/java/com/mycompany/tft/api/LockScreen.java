@@ -5,7 +5,6 @@
  */
 package com.mycompany.tft.api;
 
-import com.mycompany.tft.ctl.Control;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -24,18 +23,13 @@ import javax.swing.JTextField;
  * @author Azael
  */
 public class LockScreen {
-
-    private final String user;
-    private final String password;
     
     
     
-    public LockScreen(String user,String pass){
-        this.user=user;
-        this.password=pass;
-        JFrame frame = MainFrame();
-        loadLockFrame(frame);
-        frame.setVisible(true);
+    public LockScreen(){
+      JFrame frame = MainFrame();
+      loadLockFrame(frame);
+      frame.setVisible(true);
     }
     
     private JFrame MainFrame(){
@@ -50,27 +44,21 @@ public class LockScreen {
     }
     
     private Box box = new Box(BoxLayout.Y_AXIS);
-    private javax.swing.JTextField userField=new JTextField(20);
-    private javax.swing.JTextField passwordField=new JPasswordField(20);
+    private javax.swing.JTextField user=new JTextField(20);
+    private javax.swing.JTextField password=new JPasswordField(20);
     private void loadLockFrame(JFrame frame) {
         
         JPanel jPanel = new JPanel();
         jPanel.add(new JLabel("User and Password"));
-        jPanel.add(userField);
-        jPanel.add(passwordField);
+        jPanel.add(user);
+        jPanel.add(password);
         JButton verify = new JButton("Submit");
         verify.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String text = userField.getText();
-                String text1 = passwordField.getText();
-                if(text.equals(user)&&text1.equals(password)) unlock();
-             }
-
-            private void unlock() {
-                frame.dispose();
-                Control.getInstance().enableUI();
-                Control.getInstance().rebootSensor();
+                String text = user.getText();
+                String text1 = password.getText();
+                if(text.equals("admin")&&text1.equals("admin")) frame.dispose();
             }
         });
         jPanel.add(verify);

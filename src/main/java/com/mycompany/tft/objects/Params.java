@@ -10,44 +10,31 @@ package com.mycompany.tft.objects;
  * @author AZAEL
  */
 public class Params {
-    String user;
-    String pass;
-    int mode;
+    String interval;
+    Device key;
+    String mode;
 
-    public Params(String user, String pass, String mode) {
-        this.user = user;
-        this.pass = pass;
-        this.mode = Integer.parseInt(mode);
+    public Params(String interval, Device key, String mode) {
+        this.interval = interval;
+        this.key = key;
+        this.mode = mode;
     }
 
-    public String getUser() {
-        return user;
+    public String getInterval() {
+        return interval;
     }
 
-    public String getPass() {
-        return pass;
+    public Device getKey() {
+        return key;
     }
 
-    public int getMode() {
+    public String getMode() {
         return mode;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    public void setPass(String pass) {
-        this.pass = pass;
-    }
-
-
-    public void setMode(String mode) {
-        this.mode = Integer.parseInt(mode);
     }
 
     @Override
     public String toString() {
-        return "Params{" + "user=" + user + ", pass=" + pass + ", mode=" + mode + '}';
+        return "Params{" + "interval=" + interval + ", key=" + key + ", mode=" + mode + '}';
     }
     
     

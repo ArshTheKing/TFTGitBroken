@@ -25,11 +25,11 @@ public class UpdateCommand implements Command{
 
     @Override
     public void execute() {
-        /*try {
+        try {
             FileHandler.writeConfig(params.getInterval(), params.getKey().getId(),params.getMode());
         } catch (IOException ex) {
             exception=ex;
-        }*/
+        }
     }
 
     @Override

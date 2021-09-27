@@ -78,15 +78,21 @@ public class FileHandler {
     
     public static Params readConfig() throws FileNotFoundException, IOException{
         BufferedReader reader = new BufferedReader(new FileReader(paramFile));
-        String user,pass,mode;
         String line = reader.readLine();
-        user = line;
+        String interval = line;
         line = reader.readLine();
-        pass=line;
+        System.out.println(line);
+        Device selected;
+        if(line==null) 
+            selected=null;
+        else{
+            String[] split = line.split(";");
+            selected= new Device(split[0],split[1],split[2]);
+        }
         line = reader.readLine();
-        mode=line;
+        String option = line;
         reader.close();
-        return new Params(user,pass,line);
+        return new Params(interval, selected, line);
         
     }
     
