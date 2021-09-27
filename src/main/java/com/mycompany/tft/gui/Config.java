@@ -70,6 +70,11 @@ public class Config extends javax.swing.JFrame {
 
         buttonGroup1.add(jRadioButton3);
         jRadioButton3.setText("Desactivar interfaces de red (se reactivará al acercar el dispositivo llave)");
+        jRadioButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton3ActionPerformed(evt);
+            }
+        });
 
         buttonGroup1.add(jRadioButton1);
         jRadioButton1.setText("Apagar sistema automaticamente");
@@ -213,16 +218,14 @@ public class Config extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_CancelarActionPerformed
 
+    private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jRadioButton3ActionPerformed
+
     private void userPasswordChangeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userPasswordChangeButtonActionPerformed
-        this.setEnabled(false);
-        new userPasswordEdit(this, userField.getText(), passwordField.getText());
+        // TODO add your handling code here:
     }//GEN-LAST:event_userPasswordChangeButtonActionPerformed
-    
-    void setCredentials(String user, String pass) {
-        userField.setText(user);
-        passwordField.setText(pass);
-        this.setEnabled(true);
-    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Cancelar;
     private javax.swing.JButton Confirmar;
@@ -239,6 +242,4 @@ public class Config extends javax.swing.JFrame {
     private javax.swing.JTextField userField;
     private javax.swing.JButton userPasswordChangeButton;
     // End of variables declaration//GEN-END:variables
-    
-
 }
