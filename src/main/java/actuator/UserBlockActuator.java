@@ -6,6 +6,8 @@
 package actuator;
 
 import com.mycompany.tft.api.LockScreen;
+import com.mycompany.tft.ctl.Control;
+import com.mycompany.tft.objects.Params;
 
 /**
  *
@@ -15,7 +17,8 @@ public class UserBlockActuator implements Actuator{
 
     @Override
     public void actuate() {
-        LockScreen lockScreen = new LockScreen();
+        Params params=Control.getInstance().getParams();
+        LockScreen lockScreen = new LockScreen(params.getUser(),params.getPass());
     }
     
 }

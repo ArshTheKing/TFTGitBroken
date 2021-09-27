@@ -24,22 +24,13 @@ import javax.microedition.io.StreamConnectionNotifier;
  */
 public class ConnectionSensor extends Thread{
     
-    private static ConnectionSensor myself=null;
     private static final String myServiceName = "MyBtService";
     
     
-    public static ConnectionSensor getInstance(){
-        return (myself==null)? new ConnectionSensor(): myself;
-    }
-    private ConnectionSensor() {
-        myself=this;
-    }
-
     @Override
     public void run() {
         try {
             LocalDevice localDevice = LocalDevice.getLocalDevice();
-            System.out.println(localDevice.getBluetoothAddress());
             localDevice.setDiscoverable(DiscoveryAgent.GIAC);
             StreamConnectionNotifier streamConnectionNotifier;
             String connURL = "btspp://localhost:"+"7f49f6fa12e511ec82a80242ac130003"+

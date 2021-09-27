@@ -27,15 +27,18 @@ public class Config extends javax.swing.JFrame {
         initComponents();
         this.setIconImage(CustomIcon.getIcon());
         this.setLocationRelativeTo(null);
+        userField.setText(params.getUser());
+        passwordField.setText(params.getPass());
         switch(params.getMode()){
-            case "0":buttonGroup1.setSelected(jRadioButton2.getModel(), true);
+            case 0:buttonGroup1.setSelected(red.getModel(), true);
                 break;
-            case "1":buttonGroup1.setSelected(jRadioButton1.getModel(), true);
+            case 1:buttonGroup1.setSelected(apagar.getModel(), true);
                 break;
-            case "2":buttonGroup1.setSelected(jRadioButton3.getModel(), true);
+            case 2:buttonGroup1.setSelected(sesion.getModel(), true);
                 break;
         }
         this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        this.setVisible(true);
     }
 
     /**
@@ -52,11 +55,11 @@ public class Config extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
         jLabel6 = new javax.swing.JLabel();
-        jRadioButton3 = new javax.swing.JRadioButton();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
-        Confirmar = new javax.swing.JButton();
-        Cancelar = new javax.swing.JButton();
+        red = new javax.swing.JRadioButton();
+        apagar = new javax.swing.JRadioButton();
+        sesion = new javax.swing.JRadioButton();
+        confirmar = new javax.swing.JButton();
+        cancelar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         userPasswordChangeButton = new javax.swing.JButton();
         userField = new javax.swing.JTextField();
@@ -68,26 +71,26 @@ public class Config extends javax.swing.JFrame {
 
         jLabel6.setText("Efecto de perder la conexion con el smartphone:");
 
-        buttonGroup1.add(jRadioButton3);
-        jRadioButton3.setText("Desactivar interfaces de red (se reactivará al acercar el dispositivo llave)");
+        buttonGroup1.add(red);
+        red.setText("Desactivar interfaces de red (se reactivará al acercar el dispositivo llave)");
 
-        buttonGroup1.add(jRadioButton1);
-        jRadioButton1.setText("Apagar sistema automaticamente");
+        buttonGroup1.add(apagar);
+        apagar.setText("Apagar sistema automaticamente");
 
-        buttonGroup1.add(jRadioButton2);
-        jRadioButton2.setText("Cerrar sesion del usuario actual");
+        buttonGroup1.add(sesion);
+        sesion.setText("Cerrar sesion del usuario actual");
 
-        Confirmar.setText("Confirmar");
-        Confirmar.addActionListener(new java.awt.event.ActionListener() {
+        confirmar.setText("Confirmar");
+        confirmar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ConfirmarActionPerformed(evt);
+                confirmarActionPerformed(evt);
             }
         });
 
-        Cancelar.setText("Cancelar");
-        Cancelar.addActionListener(new java.awt.event.ActionListener() {
+        cancelar.setText("Cancelar");
+        cancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CancelarActionPerformed(evt);
+                cancelarActionPerformed(evt);
             }
         });
 
@@ -117,9 +120,9 @@ public class Config extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(Confirmar)
+                        .addComponent(confirmar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(Cancelar)
+                        .addComponent(cancelar)
                         .addGap(21, 21, 21))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(userPasswordChangeButton)
@@ -137,9 +140,9 @@ public class Config extends javax.swing.JFrame {
                                 .addGap(29, 29, 29)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel6)
-                                    .addComponent(jRadioButton1)
-                                    .addComponent(jRadioButton2)
-                                    .addComponent(jRadioButton3)))
+                                    .addComponent(apagar)
+                                    .addComponent(sesion)
+                                    .addComponent(red)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(17, 17, 17)
                                 .addComponent(jLabel1))
@@ -180,22 +183,22 @@ public class Config extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jRadioButton3)
+                .addComponent(red)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jRadioButton1)
+                .addComponent(apagar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jRadioButton2)
+                .addComponent(sesion)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Confirmar)
-                    .addComponent(Cancelar))
+                    .addComponent(confirmar)
+                    .addComponent(cancelar))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void ConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConfirmarActionPerformed
+    private void confirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmarActionPerformed
         Enumeration<AbstractButton> elements = buttonGroup1.getElements();
         String option = null;
         for (int i=0;elements.hasMoreElements();i++) {
@@ -206,16 +209,16 @@ public class Config extends javax.swing.JFrame {
         String pass = passwordField.getText();
         Control.getInstance().saveConfig(user,pass,option);
         this.dispose();
-    }//GEN-LAST:event_ConfirmarActionPerformed
+    }//GEN-LAST:event_confirmarActionPerformed
 
-    private void CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelarActionPerformed
+    private void cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarActionPerformed
         Control.getInstance().enableUI();
         this.dispose();
-    }//GEN-LAST:event_CancelarActionPerformed
+    }//GEN-LAST:event_cancelarActionPerformed
 
     private void userPasswordChangeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userPasswordChangeButtonActionPerformed
         this.setEnabled(false);
-        new userPasswordEdit(this, userField.getText(), passwordField.getText());
+        new UserPasswordEdit(this, userField.getText(), passwordField.getText());
     }//GEN-LAST:event_userPasswordChangeButtonActionPerformed
     
     void setCredentials(String user, String pass) {
@@ -224,18 +227,18 @@ public class Config extends javax.swing.JFrame {
         this.setEnabled(true);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Cancelar;
-    private javax.swing.JButton Confirmar;
+    private javax.swing.JRadioButton apagar;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JButton cancelar;
+    private javax.swing.JButton confirmar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JPasswordField passwordField;
+    private javax.swing.JRadioButton red;
+    private javax.swing.JRadioButton sesion;
     private javax.swing.JTextField userField;
     private javax.swing.JButton userPasswordChangeButton;
     // End of variables declaration//GEN-END:variables
