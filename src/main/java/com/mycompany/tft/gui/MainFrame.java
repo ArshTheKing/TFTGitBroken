@@ -43,13 +43,19 @@ public class MainFrame extends javax.swing.JFrame {
             sensorMode=false;
             jButton3.setText("Activar sensor");
             ctl.stopSensor();
+<<<<<<< HEAD
             jButton2.setEnabled(true);
+=======
+>>>>>>> parent of a2504e7 (Not rebootable)
             jButton4.setEnabled(true);
         } else {
             jButton3.setText("Desactivar sensor");
             sensorMode=true;
             if(ctl.isKeyDeviceSet()==false) ctl.selectKeyDevice();
+<<<<<<< HEAD
             jButton2.setEnabled(false);
+=======
+>>>>>>> parent of a2504e7 (Not rebootable)
             jButton4.setEnabled(false);
             this.toFront();
             this.setEnabled(true);

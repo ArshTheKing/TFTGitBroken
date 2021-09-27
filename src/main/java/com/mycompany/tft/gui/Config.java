@@ -70,11 +70,14 @@ public class Config extends javax.swing.JFrame {
 
         buttonGroup1.add(jRadioButton3);
         jRadioButton3.setText("Desactivar interfaces de red (se reactivará al acercar el dispositivo llave)");
+<<<<<<< HEAD
         jRadioButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRadioButton3ActionPerformed(evt);
             }
         });
+=======
+>>>>>>> parent of a2504e7 (Not rebootable)
 
         buttonGroup1.add(jRadioButton1);
         jRadioButton1.setText("Apagar sistema automaticamente");
@@ -217,6 +220,7 @@ public class Config extends javax.swing.JFrame {
         Control.getInstance().enableUI();
         this.dispose();
     }//GEN-LAST:event_CancelarActionPerformed
+<<<<<<< HEAD
 
     private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3ActionPerformed
         // TODO add your handling code here:
@@ -224,6 +228,12 @@ public class Config extends javax.swing.JFrame {
 
     private void userPasswordChangeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userPasswordChangeButtonActionPerformed
         // TODO add your handling code here:
+=======
+
+    private void userPasswordChangeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userPasswordChangeButtonActionPerformed
+        this.setEnabled(false);
+        new userPasswordEdit(this, userField.getText(), passwordField.getText());
+>>>>>>> parent of a2504e7 (Not rebootable)
     }//GEN-LAST:event_userPasswordChangeButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

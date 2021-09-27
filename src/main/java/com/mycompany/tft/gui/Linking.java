@@ -28,13 +28,6 @@ public class Linking extends javax.swing.JFrame {
         this.setVisible(true);
     }
 
-    @Override
-    public void dispose() {
-        super.dispose(); 
-        myself=null;//To change body of generated methods, choose Tools | Templates.
-    }
-    
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

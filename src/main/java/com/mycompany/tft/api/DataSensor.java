@@ -5,11 +5,11 @@
  */
 package com.mycompany.tft.api;
 
+import com.mycompany.tft.ctl.Control;
 import actuator.Actuator;
 import actuator.NetworkShutdownActuator;
 import actuator.ShutdownActuator;
 import actuator.UserBlockActuator;
-import com.mycompany.tft.ctl.Control;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
@@ -25,16 +25,16 @@ public class DataSensor extends Thread{
     private boolean exit;
     private InputStream deviceStream;
     private float batteryLvl;
-    private int mode;
-    private boolean enable;
 
-    public DataSensor(int actuator) {
+    private DataSensor(int actuator) {
         super();
         setAction(actuator);
     }
+    public static DataSensor getInstance(){
+        return (myself==null) ? myself=new DataSensor(2): myself;
+    }
 
     private void setAction(int actuator) {
-        this.mode=actuator;
         switch(actuator){
             case 0:this.action=new NetworkShutdownActuator();
              break;
@@ -61,20 +61,21 @@ public class DataSensor extends Thread{
                 byte[] b= new byte[1024];
                 int read = deviceStream.read(b,0,4);
                 String data= new String(b);
+                System.out.println(data.equals("exit"));
+                System.out.println("exit");
+                System.out.println(data);
                 if(data.contentEquals("exit")) {
                     action.actuate();
                     sleep();
                     continue;
                 }
                 if(read==-1) disconected();
-                else{
-                    Float tmp = Float.parseFloat(data);
-                    System.out.println(data);
-                    if (tmp!=batteryLvl) {
-                        batteryLvl=tmp;
-                        Control.getInstance().updateBattery((int) batteryLvl);
-                    }
-                }
+                System.out.println(data);
+                /*Float tmp = Float.parseFloat(data);
+                if (tmp!=batteryLvl) {
+                    batteryLvl=tmp;
+                    Control.getInstance().updateBattery((int) batteryLvl);
+                }*/
             }
         } catch (IOException ex) {
             Logger.getLogger(DataSensor.class.getName()).log(Level.SEVERE, null, ex);
@@ -95,16 +96,14 @@ public class DataSensor extends Thread{
     }
 
     private void disconected() {
-        if(enable){
-            action.actuate();
-            this.sleep();
-        }
+        System.out.println("Device dc");
+        action.actuate();
+        this.sleep();
+        
+        
     }
 
-    public void setEnable(boolean b) {
-        this.enable=b;
-    }
 
-    public void end(){
-    }
+    
+    
 }
