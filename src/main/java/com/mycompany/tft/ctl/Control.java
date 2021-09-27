@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.bluetooth.RemoteDevice;
+import javax.microedition.io.StreamConnectionNotifier;
 import javax.swing.JOptionPane;
 
 /**
@@ -39,13 +40,18 @@ public class Control {
     private Params params;
     private RemoteDevice key;
     private InputStream connection;
+<<<<<<< Updated upstream
+=======
+    private DataSensor dataSensor;
+    private final StreamConnectionNotifier btNotifier;
+>>>>>>> Stashed changes
     
     private Control(){
         this.myself=this;
         ui=new MainFrame(this);
         ui.setEnabled(false);
         getLocalName();
-        ui.setEnabled(true);
+        btNotifier = ExtraMethods.getBTNotifier();
         try {
             dev=FileHandler.readDevice();
             //params= FileHandler.readConfig();
@@ -60,6 +66,11 @@ public class Control {
         } catch (IOException ex) {
             System.out.println("Error al leer los archivos");
         }
+<<<<<<< Updated upstream
+=======
+        ui.setEnabled(true);
+        
+>>>>>>> Stashed changes
     }
     
     public static Control getInstance(){
@@ -70,7 +81,12 @@ public class Control {
         ui.setEnabled(false);
         Linking linking= Linking.getIntance();
         linking.setLocationRelativeTo(ui);
+<<<<<<< Updated upstream
         ConnectionSensor sensor = ConnectionSensor.getInstance();
+=======
+        linking.setAlwaysOnTop(true);
+        ConnectionSensor sensor = new ConnectionSensor(btNotifier);
+>>>>>>> Stashed changes
         sensor.start();
         try {
             sensor.join(1000*60);
@@ -225,5 +241,22 @@ public class Control {
         }
     }
 
+<<<<<<< Updated upstream
+=======
+    public Params getParams() {
+        return params;        
+    }
+
+    public void cleanConnection() {
+        //TODO if dataConnection ends
+        //DataSensor.getInstance().setEnable(false);
+    }
+
+    public void rebootSensor() {
+        ui.dispose();
+        ui=new MainFrame(this);
+    }
+
+>>>>>>> Stashed changes
 
 }

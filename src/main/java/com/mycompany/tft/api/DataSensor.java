@@ -96,14 +96,26 @@ public class DataSensor extends Thread{
     }
 
     private void disconected() {
+<<<<<<< Updated upstream
         System.out.println("Device dc");
         action.actuate();
         this.sleep();
         
         
+=======
+        if(enable){
+            //action.actuate();
+            this.sleep();
+        } else {
+            Control.getInstance().cleanConnection();
+        }
+>>>>>>> Stashed changes
     }
 
 
+<<<<<<< Updated upstream
     
     
+=======
+>>>>>>> Stashed changes
 }

@@ -23,9 +23,20 @@ import javax.microedition.io.StreamConnectionNotifier;
  * @author Azael
  */
 public class ConnectionSensor extends Thread{
+
+    private final StreamConnectionNotifier notifier;
+
     
+    public ConnectionSensor(StreamConnectionNotifier notifier) {
+        this.notifier=notifier;
+    }
+    
+    
+<<<<<<< Updated upstream
     private static ConnectionSensor myself=null;
     private static final String myServiceName = "MyBtService";
+=======
+>>>>>>> Stashed changes
     
     
     public static ConnectionSensor getInstance(){
@@ -38,6 +49,7 @@ public class ConnectionSensor extends Thread{
     @Override
     public void run() {
         try {
+<<<<<<< Updated upstream
             LocalDevice localDevice = LocalDevice.getLocalDevice();
             System.out.println(localDevice.getBluetoothAddress());
             localDevice.setDiscoverable(DiscoveryAgent.GIAC);
@@ -46,6 +58,9 @@ public class ConnectionSensor extends Thread{
                     ";name="+myServiceName;
             streamConnectionNotifier = (StreamConnectionNotifier) Connector.open(connURL);
             StreamConnection sc = streamConnectionNotifier.acceptAndOpen();
+=======
+            StreamConnection sc = notifier.acceptAndOpen();
+>>>>>>> Stashed changes
             RemoteDevice rd = RemoteDevice.getRemoteDevice(sc);
             InputStream stream = sc.openInputStream();
             Control.getInstance().setConnection(rd,stream);
